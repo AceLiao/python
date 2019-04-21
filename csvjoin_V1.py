@@ -16,16 +16,20 @@ alldata=[]
 for file in glob.glob(os.path.join(path1,"*.csv")):
     name=os.path.basename(file.upper().rstrip('.CSV'))
     print(name)
-    if firstfile:  
-      df=pd.read_csv(file,header=52)
-      df.insert(0,"Wafer",name)
-      columns=df.columns.values
-      firstfile=False
-      alldata.append(df)
+    if firstfile:
+        f=open(file)
+        df=pd.read_csv(f,header=52)
+        f.close()
+        df.insert(0,"Wafer",name)
+        columns=df.columns.values
+        firstfile=False
+        alldata.append(df)
     else:
-      df=pd.read_csv(file,skiprows=53)
-      df.insert(0,"Wafer",name)
-      alldata.append(df)
+        f.open(file)
+        df=pd.read_csv(f,skiprows=53)
+        f.close()
+        df.insert(0,"Wafer",name)
+        alldata.append(df)
 alldata_concat=pd.concat(alldata,axis=0)
 alldata_concat.to_csv(outsomedata,index=False,columns=columns)
 
